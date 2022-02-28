@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { getMenu } from "../data/iceCreamData";
+import IcecreamImages from "./IceCreamImage";
 
 const Menu = () => {
   const [menu, setmenu] = useState([]);
@@ -9,8 +10,8 @@ const Menu = () => {
     getMenu().then((menudata) => {
       if (isMounted) {
         setmenu(menudata);
+        //setmenu([]);
       }
-      // setmenu([]);
     });
     return () => {
       isMounted = false;
@@ -29,7 +30,9 @@ const Menu = () => {
               return (
                 <li key={id.toString()}>
                   <section className="card">
-                    <div className="image-container"></div>
+                    <div className="image-container">
+                      <IcecreamImages icecreamid={id} />
+                    </div>
                     <div className="text-container">
                       <h3>{iceCream.name}</h3>
                       <div className="content card-content">
