@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { getMenu } from "../data/iceCreamData";
+import LoaderMessage from "../structure/LoaderMessage";
 import IcecreamImages from "./IceCreamImage";
 
 const Menu = () => {
   const [menu, setmenu] = useState([]);
+  const [isLoading, setisLoading] = useState(true);
   useEffect(() => {
     let isMounted = true;
     getMenu().then((menudata) => {
       if (isMounted) {
         setmenu(menudata);
+        setisLoading(false);
         //setmenu([]);
       }
     });
@@ -23,6 +26,7 @@ const Menu = () => {
         <title> Awesome iceCream</title>
       </Helmet>
       <h2 className="main-heading">Rock your test buds with one of these</h2>
+      <LoaderMessage loadingMessage="Loading" isLoading={isLoading} />
       {menu.length > 0 ? (
         <ul className="container">
           {menu.map(
@@ -52,7 +56,7 @@ const Menu = () => {
           )}
         </ul>
       ) : (
-        <p>Sorry, menu is empty</p>
+        !isLoading && <p>Sorry, menu is empty</p>
       )}
     </main>
   );
