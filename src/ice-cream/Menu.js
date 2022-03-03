@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
+import { Link } from "react-router-dom";
 import { getMenu } from "../data/iceCreamData";
 import LoaderMessage from "../structure/LoaderMessage";
 import IcecreamImages from "./IceCreamImage";
+import propTypes from "prop-types";
 
-const Menu = () => {
+const Menu = ({ history }) => {
   const [menu, setmenu] = useState([]);
   const [isLoading, setisLoading] = useState(true);
   useEffect(() => {
@@ -20,6 +22,14 @@ const Menu = () => {
       isMounted = false;
     };
   }, []);
+
+  const onclickhandler = (to) => {
+    history.push(to);
+  };
+
+  const onLinkClickhandler = (event) => {
+    event.stopPropagation();
+  };
   return (
     <main>
       <Helmet>
@@ -33,12 +43,24 @@ const Menu = () => {
             ({ id, iceCream, inStock, quantity, price, description }) => {
               return (
                 <li key={id.toString()}>
-                  <section className="card">
+                  <section
+                    className="card"
+                    onClick={() => {
+                      onclickhandler(`/menu-item/${id.toString()}`);
+                    }}
+                  >
                     <div className="image-container">
                       <IcecreamImages icecreamid={id} />
                     </div>
                     <div className="text-container">
-                      <h3>{iceCream.name}</h3>
+                      <h3>
+                        <Link
+                          to={`/menu-item/${id.toString()}`}
+                          onClick={onLinkClickhandler}
+                        >
+                          {iceCream.name}
+                        </Link>
+                      </h3>
                       <div className="content card-content">
                         <p className="price">{`$${price.toFixed(2)}`}</p>
                         <p className={`stock${inStock ? "" : "out"}`}>
@@ -60,5 +82,8 @@ const Menu = () => {
       )}
     </main>
   );
+};
+Menu.prototype = {
+  history: propTypes.shape({ push: propTypes.func.isRequired }),
 };
 export default Menu;
